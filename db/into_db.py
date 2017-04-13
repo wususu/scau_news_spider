@@ -1,7 +1,7 @@
 import pymysql
-
 from config.db_config import *
-from logger.log import *
+from tool.tools import *
+from logger.log import my_log
 
 
 def into_db(data, origin):
@@ -12,9 +12,10 @@ def into_db(data, origin):
     conn = pymysql.connect(host=host, port=port, user=user, password=password, db=db, charset='utf8')
     cursor = conn.cursor()
     sql = "insert into news (title, href, md5, origin, news_time, content) VALUES (%s, %s, %s, %s, %s, %s)"
+    count = flag = error = 0
     try:
-        flag = 0
         for i in data:
+            count += 1
             try:
                 cursor.execute(sql, (i['title'], i['href'], i['md5'], origin, i['time'], i['content']))
                 conn.commit()
@@ -22,11 +23,17 @@ def into_db(data, origin):
                 flag += 1
                 pass
             except Exception as e:
-                print(e)
-                print(i)
+                if i['href'] == '':
+                    error +=1
+                    info = "缺少链接：　", i, "origin: ", origin
+                    my_log('error', info)
+                else:
+                    info = "未知错误"
+                    my_log("error", info)
+                pass
+
     finally:
         conn.close()
-        count = len(data)
-        my_log('info', log_message(origin, count, flag))
+        my_log('info', log_message(origin, count, flag, error))
 
 

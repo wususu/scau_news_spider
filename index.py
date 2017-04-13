@@ -1,4 +1,4 @@
-from into_db import into_db
+from db.into_db import into_db
 from spider.jwc_spider import JWCSpider
 
 

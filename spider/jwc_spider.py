@@ -1,8 +1,8 @@
-import hashlib
 import re
 import requests
 from bs4 import BeautifulSoup
 from logger.log import my_log
+from tool.tools import *
 
 
 class JWCSpider():
@@ -118,10 +118,7 @@ class JWCSpider():
             i['md5'] = self.__get_hash_code(i['href'], i['title'])
 
     def __get_hash_code(self, url, title):
-        md5 = hashlib.md5()
-        md5.update((url + title).encode(encoding='utf8'))
-        md5_code = md5.hexdigest()
-        return md5_code
+        return md5(url, title)
 
     def __get_content(self, url):
         html = self.__get_html(url)
