@@ -1,0 +1,4 @@
+beautifulsoup4==4.4.1
+PyMySQL==0.7.10
+requests==2.9.1
+
